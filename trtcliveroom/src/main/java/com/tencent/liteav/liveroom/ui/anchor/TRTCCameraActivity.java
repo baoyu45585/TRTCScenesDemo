@@ -30,7 +30,7 @@ public class TRTCCameraActivity extends TCBaseAnchorActivity {
 
     @Override
     public int getLayoutId() {
-        return R.layout.liveroom_activity_anchor;
+        return R.layout.liveroom_activity_trtc;
     }
 
     @Override
