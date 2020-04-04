@@ -1,0 +1,10 @@
+include ':app'
+include ':login'
+include ':debug'
+include ':beauty'
+//project(':beauty').projectDir = new File(settingsDir, '../../../../project/android/demo/liteav/beauty')
+include ':trtcaudiocalldemo'
+include ':trtcvideocalldemo'
+include ':trtcliveroom'
+include ':trtcvoiceroom'
+include ':vrlib'
