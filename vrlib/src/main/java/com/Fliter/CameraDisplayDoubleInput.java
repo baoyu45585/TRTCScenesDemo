@@ -130,6 +130,7 @@ public class CameraDisplayDoubleInput implements Renderer {
 
     public interface ChangePreviewSizeListener {
         void onChangePreviewSize(int previewW, int previewH);
+        int sendCustomVideoData(EGLContext context, int textureId, int textureWidth, int textureHeight);
     }
 
     public interface AutoFocusListener {
@@ -317,6 +318,10 @@ public class CameraDisplayDoubleInput implements Renderer {
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         int textureId = mGLRender.preProcess(mTextureId, null);//摄像头转向，输出FBO的id
+
+        if (mListener!=null){
+            mListener.sendCustomVideoData(currentContext,textureId, mImageWidth, mImageHeight);
+        }
         GLES20.glViewport(0, 0, mSurfaceWidth, mSurfaceHeight);
         mGLRender.onDrawFrame(textureId);
 

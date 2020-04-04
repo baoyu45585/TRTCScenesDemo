@@ -1,11 +1,16 @@
 package com.tencent.liteav.liveroom.ui.anchor;
 
 import android.content.pm.PackageManager;
+import android.hardware.Camera;
+import android.opengl.EGLContext;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 
+import com.Fliter.CameraDisplayDoubleInput;
 import com.tencent.liteav.liveroom.R;
 import com.tencent.liteav.liveroom.model.TRTCLiveRoomCallback;
 import com.tencent.rtmp.ui.TXCloudVideoView;
@@ -18,8 +23,10 @@ import com.tencent.rtmp.ui.TXCloudVideoView;
  */
 public class TRTCCameraActivity extends TCBaseAnchorActivity {
     private static final String TAG = TRTCCameraActivity.class.getSimpleName();
-    private TXCloudVideoView mTXCloudVideoView;      // 主播本地预览的 View
-
+    private GLSurfaceView surfaceView;      // 主播本地预览的 View
+    private CameraDisplayDoubleInput mCameraDisplay;
+    private FrameLayout mPreviewFrameLayout;
+    int mCameraID = Camera.CameraInfo.CAMERA_FACING_FRONT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +40,33 @@ public class TRTCCameraActivity extends TCBaseAnchorActivity {
         return R.layout.liveroom_activity_trtc;
     }
 
+    boolean isStart;
+    private CameraDisplayDoubleInput.ChangePreviewSizeListener
+            mDInputistener = new CameraDisplayDoubleInput.ChangePreviewSizeListener() {
+        @Override
+        public void onChangePreviewSize(int previewW, int previewH) {
+            mPreviewFrameLayout.requestLayout();
+        }
+
+        @Override
+        public int sendCustomVideoData(EGLContext context, int textureId, int textureWidth, int textureHeight) {
+
+            if (isStart){
+//                Log.e("========","=====sendCustomVideoData======"+textureId);
+                mLiveRoom.sendCustomVideoData(context,textureId,textureWidth,textureHeight);
+            }
+            return 0;
+        }
+    };
+
     @Override
     protected void initView() {
         super.initView();
-        mTXCloudVideoView = (TXCloudVideoView) findViewById(R.id.anchor_video_view);
-        mTXCloudVideoView.setLogMargin(10, 10, 45, 55);
-
+        surfaceView = (GLSurfaceView) findViewById(R.id.anchor_video_view);
+        mPreviewFrameLayout = (FrameLayout)findViewById(com.asha.vrlib.R.id.id_preview_layout);
+        mPreviewFrameLayout.setVisibility(View.VISIBLE);
+        mCameraID = Camera.CameraInfo.CAMERA_FACING_BACK;
+        mCameraDisplay = new CameraDisplayDoubleInput(this, mDInputistener, surfaceView, mCameraID);
     }
 
     @Override
@@ -58,8 +86,8 @@ public class TRTCCameraActivity extends TCBaseAnchorActivity {
      */
     @Override
     protected void enterRoom() {
-        mTXCloudVideoView.setVisibility(View.VISIBLE);
-        mLiveRoom.startCameraPreview(true, mTXCloudVideoView, null);
+
+        mCameraDisplay.onResume();
         super.enterRoom();
     }
 
@@ -74,6 +102,7 @@ public class TRTCCameraActivity extends TCBaseAnchorActivity {
         mLiveRoom.startPublish(mSelfUserId + "_stream", new TRTCLiveRoomCallback.ActionCallback() {
             @Override
             public void onCallback(int code, String msg) {
+                if (!isStart)isStart=true;
                 if (code == 0) {
                     Log.d(TAG, "开播成功");
                 } else {

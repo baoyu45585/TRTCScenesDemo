@@ -2,6 +2,7 @@ package com.Fliter;
 
 import android.content.res.Configuration;
 import android.hardware.Camera;
+import android.opengl.EGLContext;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -78,6 +79,11 @@ public class FliterCameraActivity extends AppCompatActivity implements View.OnCl
         @Override
         public void onChangePreviewSize(final int previewW, final int previewH) {
             mPreviewFrameLayout.requestLayout();
+        }
+
+        @Override
+        public int sendCustomVideoData(EGLContext context, int textureId, int textureWidth, int textureHeight) {
+            return 0;
         }
     };
 

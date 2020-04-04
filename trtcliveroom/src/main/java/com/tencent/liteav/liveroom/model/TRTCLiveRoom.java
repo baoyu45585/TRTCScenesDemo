@@ -3,6 +3,7 @@ package com.tencent.liteav.liveroom.model;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.opengl.EGLContext;
 import android.os.Handler;
 
 import com.tencent.liteav.beauty.TXBeautyManager;
@@ -165,6 +166,9 @@ public abstract class TRTCLiveRoom {
      * @param callback 操作回调
      */
     public abstract void stopPublish(TRTCLiveRoomCallback.ActionCallback callback);
+
+
+    public abstract int sendCustomVideoData(EGLContext context, int textureId, int textureWidth, int textureHeight);
 
     /**
      * 播放远端视频画面

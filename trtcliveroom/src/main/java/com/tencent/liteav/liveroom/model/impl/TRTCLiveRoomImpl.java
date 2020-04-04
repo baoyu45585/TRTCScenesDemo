@@ -2,6 +2,7 @@ package com.tencent.liteav.liveroom.model.impl;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.opengl.EGLContext;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -968,6 +969,11 @@ public class TRTCLiveRoomImpl extends TRTCLiveRoom implements ITXTRTCLiveRoomDel
                 });
             }
         });
+    }
+
+
+    public int sendCustomVideoData(EGLContext context, int textureId, int textureWidth, int textureHeight) {
+        return TXTRTCLiveRoom.getInstance().sendCustomVideoData(context,textureId,textureWidth,textureHeight);
     }
 
     /**

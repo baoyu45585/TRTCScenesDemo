@@ -2,6 +2,7 @@ package com.tencent.liteav.liveroom.model.impl.av.trtc;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.opengl.EGLContext;
 
 import com.tencent.liteav.beauty.TXBeautyManager;
 import com.tencent.liteav.liveroom.model.TRTCBGMManager;
@@ -28,6 +29,8 @@ public interface ITRTCTXLiveRoom {
     void setMirror(boolean isMirror);
 
     void muteLocalAudio(boolean mute);
+
+    int sendCustomVideoData(EGLContext context, int textureId, int textureWidth, int textureHeight);
 
     void startPublish(String streamId, TXCallback callback);
 

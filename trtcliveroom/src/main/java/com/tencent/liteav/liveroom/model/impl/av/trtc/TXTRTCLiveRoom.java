@@ -2,6 +2,7 @@ package com.tencent.liteav.liveroom.model.impl.av.trtc;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.opengl.EGLContext;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -125,6 +126,27 @@ public class TXTRTCLiveRoom extends TRTCCloudListener implements ITRTCTXLiveRoom
         mTRTCCloud.exitRoom();
     }
 
+    @Override
+    public int sendCustomVideoData(EGLContext context, int textureId, int textureWidth, int textureHeight) {
+        if (mTRTCCloud == null || context == null) {
+            return textureId;
+        }
+        //将视频帧通过纹理方式塞给SDK
+        TRTCCloudDef.TRTCVideoFrame videoFrame = new TRTCCloudDef.TRTCVideoFrame();
+        videoFrame.texture = new TRTCCloudDef.TRTCTexture();
+        videoFrame.texture.textureId = textureId;
+        videoFrame.texture.eglContext14 = context;
+        videoFrame.width = textureWidth;
+        videoFrame.height = textureHeight;
+        videoFrame.pixelFormat = TRTCCloudDef.TRTC_VIDEO_PIXEL_FORMAT_Texture_2D;
+        videoFrame.bufferType = TRTCCloudDef.TRTC_VIDEO_BUFFER_TYPE_TEXTURE;
+        if (mTRTCCloud!= null) {
+            mTRTCCloud.sendCustomVideoData(videoFrame);
+        }
+
+        return textureId;
+    }
+
 
     @Override
     public void startPublish(String streamId, TXCallback callback) {
@@ -134,6 +156,17 @@ public class TXTRTCLiveRoom extends TRTCCloudListener implements ITRTCTXLiveRoom
             TRTCLogger.i(TAG, "not enter room yet, enter trtc room.");
             internalEnterRoom();
         }
+        mTRTCCloud.enableCustomVideoCapture(true);
+        mTRTCCloud.setLocalVideoRenderListener(TRTCCloudDef.TRTC_VIDEO_PIXEL_FORMAT_Texture_2D,
+                TRTCCloudDef.TRTC_VIDEO_BUFFER_TYPE_TEXTURE,
+                new TRTCCloudListener.TRTCVideoRenderListener() {
+
+                    @Override
+                    public void onRenderVideoFrame(String userId, int i, TRTCCloudDef.TRTCVideoFrame trtcVideoFrame) {
+//                         Log.e("===========", "=========onRenderVideoFrame"
+//                                 + trtcVideoFrame.texture.eglContext14);
+                    }
+                });
         // 如果是观众，那么则切换到主播
         if (mOriginRole == TRTCCloudDef.TRTCRoleAudience) {
             mTRTCCloud.switchRole(TRTCCloudDef.TRTCRoleAnchor);
@@ -154,7 +187,7 @@ public class TXTRTCLiveRoom extends TRTCCloudListener implements ITRTCTXLiveRoom
             mTRTCCloud.setVideoEncoderParam(param);
         }
         Log.e("=============","===========streamId========"+streamId);
-//        mTRTCCloud.startPublishing(streamId, TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_BIG);
+        mTRTCCloud.startPublishing(streamId, TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_BIG);
         mTRTCCloud.startLocalAudio();
         if (callback != null) {
             callback.onCallback(0, "start publish success.");
