@@ -26,6 +26,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
+            android:name=".ui.anchor.TRTCCameraActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
             android:name=".ui.audience.TCAudienceActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

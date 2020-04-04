@@ -28,6 +28,7 @@ import com.tencent.liteav.liveroom.model.TRTCLiveRoom;
 import com.tencent.liteav.liveroom.model.TRTCLiveRoomCallback;
 import com.tencent.liteav.liveroom.model.TRTCLiveRoomDef;
 import com.tencent.liteav.liveroom.ui.anchor.TCCameraAnchorActivity;
+import com.tencent.liteav.liveroom.ui.anchor.TRTCCameraActivity;
 import com.tencent.liteav.liveroom.ui.audience.TCAudienceActivity;
 import com.tencent.liteav.liveroom.ui.common.utils.TCConstants;
 import com.tencent.liteav.liveroom.ui.widget.RoundImageView;
@@ -170,7 +171,7 @@ public class LiveRoomListFragment extends Fragment implements SwipeRefreshLayout
         RoomManager.getInstance().createRoom(getRoomId(), TCConstants.TYPE_LIVE_ROOM, new RoomManager.ActionCallback() {
             @Override
             public void onSuccess() {
-                Intent intent = new Intent(getActivity(), TCCameraAnchorActivity.class);
+                Intent intent = new Intent(getActivity(), TRTCCameraActivity.class);
                 intent.putExtra(TCConstants.ROOM_TITLE, title);
                 intent.putExtra(TCConstants.GROUP_ID, getRoomId());
                 startActivity(intent);

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.tencent.liteav.beauty.TXBeautyManager;
 import com.tencent.liteav.liveroom.model.impl.TRTCBGMManagerImpl;
@@ -152,8 +153,8 @@ public class TXTRTCLiveRoom extends TRTCCloudListener implements ITRTCTXLiveRoom
             param.videoResolutionMode = TRTCCloudDef.TRTC_VIDEO_RESOLUTION_MODE_PORTRAIT;
             mTRTCCloud.setVideoEncoderParam(param);
         }
-        ;
-        mTRTCCloud.startPublishing(streamId, TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_BIG);
+        Log.e("=============","===========streamId========"+streamId);
+//        mTRTCCloud.startPublishing(streamId, TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_BIG);
         mTRTCCloud.startLocalAudio();
         if (callback != null) {
             callback.onCallback(0, "start publish success.");
